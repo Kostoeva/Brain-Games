@@ -9,13 +9,13 @@ public class CardMain : MonoBehaviour {
 	void Start () {
 
 		// Tests the makeSquareGrid method along with all the methods used in the process
-		Card[,] grid = Card.makeSquareGrid("hard", 2);
-		for(int k = 0; k < grid.GetLength(0); k++){
-			for(int l = 0; l < grid.GetLength(0); l++){
-				Debug.Log(grid[k, l].getImgLoc());
-				Debug.Log(grid[k, l].getColor());
-			}
-		}
+		// Card[,] grid = Card.makeSquareGrid("hard", 2);
+		// for(int k = 0; k < grid.GetLength(0); k++){
+		// 	for(int l = 0; l < grid.GetLength(0); l++){
+		// 		Debug.Log(grid[k, l].getImgLoc());
+		// 		Debug.Log(grid[k, l].getColor());
+		// 	}
+		// }
 
 	}
 

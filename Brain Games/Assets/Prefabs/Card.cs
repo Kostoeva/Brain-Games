@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Card{
+  private bool chosen = false;
   private string imgLoc;
   private string color;
   private static string[] colors = {"white", "red", "blue"};
@@ -57,11 +58,20 @@ public class Card{
 	}
 
   // Getters
+  public bool getChosen(){
+    return chosen;
+  }
+
   public string getImgLoc(){
     return imgLoc;
   }
 
   public string getColor(){
     return color;
+  }
+
+  // Setters
+  public void setChosen(bool c){
+    chosen = c;
   }
 }
