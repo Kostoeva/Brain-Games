@@ -1,9 +1,9 @@
 /************************************************************************************
 
-Copyright   :   Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+Copyright   :   Copyright 2017 Oculus VR, LLC. All Rights reserved.
 
-Licensed under the Oculus SDK License Version 3.4.1 (the "License");
-you may not use the Oculus SDK except in compliance with the License,
+Licensed under the Oculus VR Rift SDK License Version 3.4.1 (the "License");
+you may not use the Oculus VR Rift SDK except in compliance with the License,
 which is provided at the time of installation or download, or which
 otherwise accompanies this software in either electronic or hard copy form.
 
@@ -11,7 +11,7 @@ You may obtain a copy of the License at
 
 https://developer.oculus.com/licenses/sdk-3.4.1
 
-Unless required by applicable law or agreed to in writing, the Oculus SDK
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
@@ -95,34 +95,10 @@ public class OVROverlay : MonoBehaviour
 	public bool isProtectedContent = false;
 
 	/// <summary>
-	/// If true, the layer will be created as an external surface. externalSurfaceObject contains the Surface object. It's effective only on Android.
-	/// </summary>
-	[Tooltip("If true, the layer will be created as an external surface. externalSurfaceObject contains the Surface object. It's effective only on Android.")]
-	public bool isExternalSurface = false;
-
-	/// <summary>
-	/// The width which will be used to create the external surface. It's effective only on Android.
-	/// </summary>
-	[Tooltip("The width which will be used to create the external surface. It's effective only on Android.")]
-	public int externalSurfaceWidth = 0;
-
-	/// <summary>
-	/// The height which will be used to create the external surface. It's effective only on Android.
-	/// </summary>
-	[Tooltip("The height which will be used to create the external surface. It's effective only on Android.")]
-	public int externalSurfaceHeight = 0;
-
-	/// <summary>
 	/// The compositionDepth defines the order of the OVROverlays in composition. The overlay/underlay with smaller compositionDepth would be composited in the front of the overlay/underlay with larger compositionDepth.
 	/// </summary>
 	[Tooltip("The compositionDepth defines the order of the OVROverlays in composition. The overlay/underlay with smaller compositionDepth would be composited in the front of the overlay/underlay with larger compositionDepth.")]
 	public int compositionDepth = 0;
-
-	/// <summary>
-	/// The noDepthBufferTesting will stop layer's depth buffer compositing even if the engine has "Depth buffer sharing" enabled on Rift.
-	/// </summary>
-	[Tooltip("The noDepthBufferTesting will stop layer's depth buffer compositing even if the engine has \"Shared Depth Buffer\" enabled")]
-	public bool noDepthBufferTesting = false;
 
 	/// <summary>
 	/// Specify overlay's shape
@@ -139,17 +115,6 @@ public class OVROverlay : MonoBehaviour
 	public Texture[] textures = new Texture[] { null, null };
 
 	protected IntPtr[] texturePtrs = new IntPtr[] { IntPtr.Zero, IntPtr.Zero };
-
-	/// <summary>
-	/// The Surface object (Android only).
-	/// </summary>
-	public System.IntPtr externalSurfaceObject;
-
-	public delegate void ExternalSurfaceObjectCreated();
-	/// <summary>
-	/// Will be triggered after externalSurfaceTextueObject get created.
-	/// </summary>
-	public ExternalSurfaceObjectCreated externalSurfaceObjectCreated;
 
 	/// <summary>
 	/// Use this function to set texture and texNativePtr when app is running 
@@ -261,14 +226,7 @@ public class OVROverlay : MonoBehaviour
 		if (layerId > 0)
 		{
 			layerDesc = desc;
-			if (isExternalSurface)
-			{
-				stageCount = 1;
-			}
-			else
-			{
-				stageCount = OVRPlugin.GetLayerTextureStageCount(layerId);
-			}
+			stageCount = OVRPlugin.GetLayerTextureStageCount(layerId);
 		}
 
 		isOverridePending = false;
@@ -278,23 +236,6 @@ public class OVROverlay : MonoBehaviour
 
 	private bool CreateLayerTextures(bool useMipmaps, OVRPlugin.Sizei size, bool isHdr)
 	{
-		if (isExternalSurface)
-		{
-			if (externalSurfaceObject == System.IntPtr.Zero)
-			{
-				externalSurfaceObject = OVRPlugin.GetLayerAndroidSurfaceObject(layerId);
-				if (externalSurfaceObject != System.IntPtr.Zero)
-				{
-					Debug.LogFormat("GetLayerAndroidSurfaceObject returns {0}", externalSurfaceObject);
-					if (externalSurfaceObjectCreated != null)
-					{
-						externalSurfaceObjectCreated();
-					}
-				}
-			}
-			return false;
-		}
-
 		bool needsCopy = false;
 
 		if (stageCount <= 0)
@@ -348,11 +289,6 @@ public class OVROverlay : MonoBehaviour
 
 	private void DestroyLayerTextures()
 	{
-		if (isExternalSurface)
-		{
-			return;
-		}
-
 		for (int eyeId = 0; layerTextures != null && eyeId < texturesPerStage; ++eyeId)
 		{
 			if (layerTextures[eyeId].swapChain != null)
@@ -370,7 +306,7 @@ public class OVROverlay : MonoBehaviour
 		if (layerIndex != -1)
 		{
 			// Turn off the overlay if it was on.
-			OVRPlugin.EnqueueSubmitLayer(true, false, false, IntPtr.Zero, IntPtr.Zero, -1, 0, OVRPose.identity.ToPosef(), Vector3.one.ToVector3f(), layerIndex, (OVRPlugin.OverlayShape)prevOverlayShape);
+			OVRPlugin.EnqueueSubmitLayer(true, false, IntPtr.Zero, IntPtr.Zero, -1, 0, OVRPose.identity.ToPosef(), Vector3.one.ToVector3f(), layerIndex, (OVRPlugin.OverlayShape)prevOverlayShape);
 			instances[layerIndex] = null;
 			layerIndex = -1;
 		}
@@ -391,11 +327,6 @@ public class OVROverlay : MonoBehaviour
 
 	private bool LatchLayerTextures()
 	{
-		if (isExternalSurface)
-		{
-			return true;
-		}
-
 		for (int i = 0; i < texturesPerStage; ++i)
 		{
 			if (textures[i] != layerTextures[i].appTexture || layerTextures[i].appTexturePtr == IntPtr.Zero)
@@ -448,31 +379,14 @@ public class OVROverlay : MonoBehaviour
 
 	private OVRPlugin.LayerDesc GetCurrentLayerDesc()
 	{
-		OVRPlugin.Sizei textureSize = new OVRPlugin.Sizei() { w = 0, h = 0 };
-
-		if (isExternalSurface)
-		{
-			textureSize.w = externalSurfaceWidth;
-			textureSize.h = externalSurfaceHeight;
-		}
-		else
-		{
-			if (textures[0] == null)
-			{
-				Debug.LogWarning("textures[0] hasn't been set");
-			}
-			textureSize.w = textures[0] ? textures[0].width : 0;
-			textureSize.h = textures[0] ? textures[0].height : 0;
-		}
-
 		OVRPlugin.LayerDesc newDesc = new OVRPlugin.LayerDesc() {
 			Format = OVRPlugin.EyeTextureFormat.R8G8B8A8_sRGB,
-			LayerFlags = isExternalSurface ? 0 : (int)OVRPlugin.LayerFlags.TextureOriginAtBottomLeft,
+			LayerFlags = (int)OVRPlugin.LayerFlags.TextureOriginAtBottomLeft,
 			Layout = layout,
 			MipLevels = 1,
 			SampleCount = 1,
 			Shape = (OVRPlugin.OverlayShape)currentOverlayShape,
-			TextureSize = textureSize
+			TextureSize = new OVRPlugin.Sizei() { w = textures[0].width, h = textures[0].height }
 		};
 
 		var tex2D = textures[0] as Texture2D;
@@ -507,21 +421,11 @@ public class OVROverlay : MonoBehaviour
 			newDesc.LayerFlags |= (int)OVRPlugin.LayerFlags.ProtectedContent;
 		}
 
-		if (isExternalSurface)
-		{
-			newDesc.LayerFlags |= (int)OVRPlugin.LayerFlags.AndroidSurfaceSwapChain;
-		}
-
 		return newDesc;
 	}
 
 	private bool PopulateLayer(int mipLevels, bool isHdr, OVRPlugin.Sizei size, int sampleCount, int stage)
 	{
-		if (isExternalSurface)
-		{
-			return true;
-		}
-
 		bool ret = false;
 
 		RenderTextureFormat rtFormat = (isHdr) ? RenderTextureFormat.ARGBHalf : RenderTextureFormat.ARGB32;
@@ -604,13 +508,10 @@ public class OVROverlay : MonoBehaviour
 		return ret;
 	}
 
-	private bool SubmitLayer(bool overlay, bool headLocked, bool noDepthBufferTesting, OVRPose pose, Vector3 scale, int frameIndex)
+	private bool SubmitLayer(bool overlay, bool headLocked, OVRPose pose, Vector3 scale, int frameIndex)
 	{
 		int rightEyeIndex = (texturesPerStage >= 2) ? 1 : 0;
-		bool isOverlayVisible = OVRPlugin.EnqueueSubmitLayer(overlay, headLocked, noDepthBufferTesting, 
-			isExternalSurface ? System.IntPtr.Zero : layerTextures[0].appTexturePtr,
-			isExternalSurface ? System.IntPtr.Zero : layerTextures[rightEyeIndex].appTexturePtr, 
-			layerId, frameIndex, pose.flipZ().ToPosef(), scale.ToVector3f(), layerIndex, (OVRPlugin.OverlayShape)currentOverlayShape);
+		bool isOverlayVisible = OVRPlugin.EnqueueSubmitLayer(overlay, headLocked, layerTextures[0].appTexturePtr, layerTextures[rightEyeIndex].appTexturePtr, layerId, frameIndex, pose.flipZ().ToPosef(), scale.ToVector3f(), layerIndex, (OVRPlugin.OverlayShape)currentOverlayShape);
 
 		prevOverlayShape = currentOverlayShape;
 
@@ -716,7 +617,7 @@ public class OVROverlay : MonoBehaviour
 		// The overlay must be specified every eye frame, because it is positioned relative to the
 		// current head location.  If frames are dropped, it will be time warped appropriately,
 		// just like the eye buffers.
-		if (currentOverlayType == OverlayType.None || ((textures.Length < texturesPerStage || textures[0] == null) && !isExternalSurface))
+		if (currentOverlayType == OverlayType.None || textures.Length < texturesPerStage || textures[0] == null)
 			return;
 
 		OVRPose pose = OVRPose.identity;
@@ -738,7 +639,7 @@ public class OVROverlay : MonoBehaviour
 
 		createdLayer |= CreateLayerTextures(useMipmaps, newDesc.TextureSize, isHdr);
 
-		if (!isExternalSurface && (layerTextures[0].appTexture as RenderTexture != null))
+		if (layerTextures[0].appTexture as RenderTexture != null)
 			isDynamic = true;
 
 		if (!LatchLayerTextures())
@@ -752,7 +653,7 @@ public class OVROverlay : MonoBehaviour
 				return;
 		}
 
-		bool isOverlayVisible = SubmitLayer(overlay, headLocked, noDepthBufferTesting, pose, scale, frameIndex);
+		bool isOverlayVisible = SubmitLayer(overlay, headLocked, pose, scale, frameIndex);
 
 		prevFrameIndex = frameIndex;
 		if (isDynamic)
