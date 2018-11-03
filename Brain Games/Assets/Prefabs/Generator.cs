@@ -13,7 +13,19 @@ public class Generator{
 		difficulty = diff;
 		n = size;
 		cardObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		cardObject.transform.localScale = new Vector3(6.4F, 0.04F, 8.9f);
+		cardObject.transform.localScale = new Vector3(0.64F, 0.004F, 0.89f);
+		cardObject.transform.Translate(new Vector3(100F, 100F, 100F));
+
+		BoxCollider bc = cardObject.AddComponent<BoxCollider>() as BoxCollider;
+		bc.size = new Vector3(1.0F, 1.0F, 1.0f);
+
+		Rigidbody rb = cardObject.AddComponent<Rigidbody>() as Rigidbody;
+		rb.useGravity = false;
+
+		OVRGrabbable so = cardObject.AddComponent<OVRGrabbable>();
+
+		Object.Destroy(cardObject);
+
 		cards = new GameObject[n * n];
 		position = 0;
 		generateGrid();
@@ -25,8 +37,9 @@ public class Generator{
 
 		for(int i = 0; i < grid.GetLength(0); i++){
 			for(int j = 0; j < grid.GetLength(1); j++){
-				GameObject card = Object.Instantiate(cardObject, new Vector3(i * 8.4F, 0, j * 10.9F), Quaternion.identity);
+				GameObject card = Object.Instantiate(cardObject, new Vector3(i * 0.8F, 0, j * 1F), Quaternion.identity);
 				changeMatWithLoc(card, grid[i, j].getImgLoc());
+				Card cardScript = cardObject.AddComponent<Card>();
 				cards[position++] = card;
 			}
 		}

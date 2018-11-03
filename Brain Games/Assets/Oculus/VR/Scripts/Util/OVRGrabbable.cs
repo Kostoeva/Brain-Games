@@ -27,6 +27,7 @@ using UnityEngine;
 /// </summary>
 public class OVRGrabbable : MonoBehaviour
 {
+    private GameObject grabbedObject;
     [SerializeField]
     protected bool m_allowOffhandGrab = true;
     [SerializeField]
@@ -122,6 +123,15 @@ public class OVRGrabbable : MonoBehaviour
         m_grabbedBy = hand;
         m_grabbedCollider = grabPoint;
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        grabbedObject = grabPoint.attachedRigidbody.gameObject;
+        if (grabbedObject.GetComponent<Card>()){
+          grabbedObject.GetComponent<Card>().setGrabbed(true);
+          Debug.Log("You are amazing!");
+        }else{
+          Debug.Log("Grabbed not a card!");
+        }
+
+
     }
 
 	/// <summary>
@@ -135,6 +145,12 @@ public class OVRGrabbable : MonoBehaviour
         rb.angularVelocity = angularVelocity;
         m_grabbedBy = null;
         m_grabbedCollider = null;
+        if (grabbedObject.GetComponent<Card>()){
+          grabbedObject.GetComponent<Card>().setGrabbed(false);
+          Debug.Log("You are very interesting!");
+        }else{
+          Debug.Log("Dropped not a card!");
+        }
     }
 
     void Awake()

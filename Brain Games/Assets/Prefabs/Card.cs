@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Card{
+public class Card:MonoBehaviour{
   private bool chosen = false;
+  private bool grabbed = false;
   private string imgLoc;
   private string color;
   private static string[] colors = {"white", "red", "blue"};
@@ -70,8 +71,16 @@ public class Card{
     return color;
   }
 
+  public bool getGrabbed(){
+    return grabbed;
+  }
+
   // Setters
   public void setChosen(bool c){
     chosen = c;
+  }
+
+  public void setGrabbed(bool g){
+    grabbed = g;
   }
 }

@@ -16,6 +16,7 @@ public class CardMain : MonoBehaviour {
 		// 		Debug.Log(grid[k, l].getColor());
 		// 	}
 		// }
+		Generator gen = new Generator("hard", 3);
 
 	}
 
