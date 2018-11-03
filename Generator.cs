@@ -6,7 +6,8 @@ public class Generator{
 	private string difficulty;
 	private int n;
 	public GameObject cardObject;
-    // Hello world!
+    // Helli
+
 	public Generator(string diff, int size){
 		difficulty = diff;
 		n = size;
