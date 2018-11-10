@@ -261,6 +261,7 @@
      <Compile Include="Assets\Prefabs\CardMain.cs" />
      <Compile Include="Assets\Prefabs\cardTracker.cs" />
      <Compile Include="Assets\Prefabs\Generator.cs" />
+     <Compile Include="Assets\Prefabs\Logic.cs" />
      <Compile Include="Assets\Prefabs\Utilities.cs" />
      <Compile Include="Assets\ScaleObjects.cs" />
      <None Include="Assets\Oculus\Avatar\Resources\Materials\Version1.5\Avatar_PC_SingleComponent.shader" />

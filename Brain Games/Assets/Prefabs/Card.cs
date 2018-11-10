@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Card:MonoBehaviour{
   private bool chosen = false;
+  private bool init = false;
   private bool grabbed = false;
   private string imgLoc;
   private string color;
@@ -75,6 +76,10 @@ public class Card:MonoBehaviour{
     return grabbed;
   }
 
+  public bool getInit(){
+    return init;
+  }
+
   // Setters
   public void setChosen(bool c){
     chosen = c;
@@ -82,5 +87,9 @@ public class Card:MonoBehaviour{
 
   public void setGrabbed(bool g){
     grabbed = g;
+  }
+
+  public void setInit(bool i){
+    init = i;
   }
 }

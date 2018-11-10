@@ -6,7 +6,7 @@ public class GeneratorGameObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		int n = 3;
+		int n = 2;
 		Generator gen = new Generator("hard", n);
 	}
 
