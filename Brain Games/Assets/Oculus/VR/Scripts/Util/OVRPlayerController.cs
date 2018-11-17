@@ -229,11 +229,11 @@ public class OVRPlayerController : MonoBehaviour
 			var p = CameraRig.transform.localPosition;
 			if (OVRManager.instance.trackingOriginType == OVRManager.TrackingOrigin.EyeLevel)
 			{
-				p.y = OVRManager.profile.eyeHeight - (0.5f * Controller.height) + Controller.center.y;
+				p.y = OVRManager.profile.eyeHeight - (0.5f * Controller.height) + Controller.center.y + 2; //hardcodedbtw
 			}
 			else if (OVRManager.instance.trackingOriginType == OVRManager.TrackingOrigin.FloorLevel)
 			{
-				p.y = - (0.5f * Controller.height) + Controller.center.y;
+				p.y = - (0.5f * Controller.height) + Controller.center.y + 2;
 			}
 			CameraRig.transform.localPosition = p;
 		}
