@@ -28,13 +28,15 @@ public class Generator{
 		cardObject.transform.localScale = new Vector3(localScaleX, 0.004F, localScaleZ);
 		cardObject.transform.Translate(new Vector3(100F, 100F, 100F));
 
-		BoxCollider bc = cardObject.AddComponent<BoxCollider>() as BoxCollider;
-		bc.size = new Vector3(1.0F, 1.0F, 1.0f);
+		//BoxCollider bc = cardObject.AddComponent<BoxCollider>() as BoxCollider;
+		//bc.size = new Vector3(1.0F, 1.0F, 1.0f);
 
 		Rigidbody rb = cardObject.AddComponent<Rigidbody>() as Rigidbody;
 		rb.useGravity = false;
 
 		OVRGrabbable so = cardObject.AddComponent<OVRGrabbable>();
+
+        cardObject.AddComponent<cardSnap>();
 
 		Object.Destroy(cardObject);
 
